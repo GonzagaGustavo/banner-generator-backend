@@ -26,8 +26,15 @@ app.post("/", (req, res) => {
           if (error === null) {
             for (let i = 0; i < result.feed.entry.length; i++) {
               if (JSON.stringify(result.feed.entry[i].id) == `"${req.body.id}"`) {
-                const e = JSON.stringify(result.feed.entry[i])
-                res.send(e)
+                const e = result.feed.entry[i]
+                res.send([{
+                  id: e.id,
+                  name: e.title,
+                  price: e.price,
+                  p_value: e.installment.amount,
+                  p_mounth: e.installment.months,
+                  img: e.image_link
+                }])
                 // res.send({
                 //   id: e.id,
                 //   name: e.title,
