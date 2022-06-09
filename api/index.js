@@ -2,7 +2,8 @@ const express = require("express");
 const https = require("https");
 const xml2js = require("xml2js");
 const bodyParser = require("body-parser");
-const cors = require('cors')
+const cors = require('cors');
+const route = require("./remove");
 const stripPrefix = require('xml2js').processors.stripPrefix;
 const parser = new xml2js.Parser({ explicitArray: false, tagNameProcessors: [ stripPrefix ], attrNameProcessors: [ stripPrefix ]});
 const app = express();
@@ -12,6 +13,7 @@ app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: "true" }));
 
+app.use(route)
 app.post("/", (req, res) => {
   
   let reu = https.get(
