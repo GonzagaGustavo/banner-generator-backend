@@ -2,6 +2,7 @@ const route = require('express').Router()
 const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
+const uploadUser = require('./midleware/upload')
 
 route.post("/generate", (req, res) => {
   //Remover o fundo da Imagem da cerveja
@@ -29,6 +30,13 @@ route.post("/generate", (req, res) => {
 //   });
   //Removeu o fundo
 console.log(req)
+})
+route.post("/upload",uploadUser.single('image'), async (req, res) => {
+  if(req.file) {
+    res.send("Upload Realizado")
+  } else {
+    res.status(400).send("Erro no upload!")
+  }
 })
 
 module.exports = route
