@@ -55,4 +55,8 @@ app.post("/", (req, res) => {
   );
 });
 
+app.post("/createBanner", async (req, res) => {
+  
+})
+
 app.listen(port, () => console.log(`Porta ${port}`));
