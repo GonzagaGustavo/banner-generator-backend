@@ -3,7 +3,6 @@ const https = require("https");
 const xml2js = require("xml2js");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const route = require("./remove");
 const sharp = require("sharp");
 const { default: axios } = require("axios");
 const FormData = require('form-data');
@@ -145,7 +144,6 @@ await sharp(__dirname + '/public/resize.png')
     }).catch(error => {
       console.log(error)
     })
-    res.send("ok")
 });
 
 app.listen(port, () => console.log(`Porta ${port}`));
