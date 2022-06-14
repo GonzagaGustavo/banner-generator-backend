@@ -8,6 +8,7 @@ const { default: axios } = require("axios");
 const FormData = require('form-data');
 const fs = require('fs');
 const uploadUser = require("./midleware/upload");
+const path = require("path");
 const stripPrefix = require("xml2js").processors.stripPrefix;
 const parser = new xml2js.Parser({
   explicitArray: false,
@@ -21,12 +22,12 @@ const port = 8080;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: "true" }));
+app.use("/files", express.static(path.resolve(__dirname, "public")))
 
 app.post("/upload", uploadUser.single("image"), async (req, res) => {
   if (req.file) {
     console.log(req.file.mimetype)
     sharp(__dirname + `/public/background.${req.file.mimetype.substring(6, 10)}`)
-      .jpeg()
       .toFile(__dirname + "/public/background.jpg")
       .then((info) => {
         console.log(info);
@@ -144,6 +145,7 @@ await sharp(__dirname + '/public/resize.png')
     }).catch(error => {
       console.log(error)
     })
+    res.send("http://localhost:8080/files/banner.jpg")
 });
 
 app.listen(port, () => console.log(`Porta ${port}`));
