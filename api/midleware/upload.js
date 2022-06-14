@@ -8,7 +8,7 @@ module.exports = (multer({
             cb(null, './public')
         },
         filename: (req, file, cb) => {
-            cb(null, Date.now().toString() + "_" + file.originalname)
+            cb(null, `background.${file.mimetype.substring(6, 10)}`)
         }
     }),
     fileFilter: (req, file, cb) => {
