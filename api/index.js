@@ -8,6 +8,7 @@ const sharp = require("sharp");
 const { default: axios } = require("axios");
 const FormData = require('form-data');
 const fs = require('fs');
+const uploadUser = require("./midleware/upload");
 const stripPrefix = require("xml2js").processors.stripPrefix;
 const parser = new xml2js.Parser({
   explicitArray: false,
@@ -22,7 +23,23 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: "true" }));
 
-app.use(route);
+app.post("/upload", uploadUser.single("image"), async (req, res) => {
+  if (req.file) {
+    console.log(req.file.mimetype)
+    sharp(__dirname + `/public/background.${req.file.mimetype.substring(6, 10)}`)
+      .jpeg()
+      .toFile(__dirname + "/public/background.jpg")
+      .then((info) => {
+        console.log(info);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    res.send("Upload Realizado");
+  } else {
+    res.status(400).send("Erro no upload!");
+  }
+});
 app.post("/", (req, res) => {
   let reu = https.get(
     "https://www.emporiodacerveja.com.br/XMLData/googleshoppingalta.xml",
@@ -84,17 +101,27 @@ app.post("/createBanner", async (req, res) => {
     .then((response) => {
       if (response.status != 200)
         return console.error("Error:", response.status, response.statusText);
-      fs.writeFileSync(__dirname + "/public/product.png", response.data);
+      fs.writeFileSync(__dirname + "/public/resize.png", response.data);
     })
     .catch((error) => {
       return console.error("Request failed:", error);
     });
 
+await sharp(__dirname + '/public/resize.png')
+  .clone()
+  .resize({ width: 400, height: 400})
+  .toFile(__dirname + '/public/product.png')
+  .then(info => {
+    console.log(info)
+  }).catch(error => {
+    console.log(error)
+  })
+
   await sharp(
     Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1000" height="430" viewBox="0 0 1000 430" xml:space="preserve">
 <text font-size="40" dy="40%" dx="40%" fill="red">${req.body[0].name}</text>
 <text font-size="30" dy="51%" dx="40%" fill="red">${req.body[0].price}</text>
-<text font-size="20" dy="61%" dx="40%" fill="red">${req.body[0].p_mounth}x de ${req.body.p_value}</text>
+<text font-size="20" dy="61%" dx="40%" fill="red">${req.body[0].p_mounth}x de ${req.body[0].p_value}</text>
 </svg>`)
   )
     .png()
@@ -118,6 +145,7 @@ app.post("/createBanner", async (req, res) => {
     }).catch(error => {
       console.log(error)
     })
+    res.send("ok")
 });
 
 app.listen(port, () => console.log(`Porta ${port}`));

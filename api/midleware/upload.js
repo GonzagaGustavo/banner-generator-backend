@@ -12,7 +12,7 @@ module.exports = (multer({
         }
     }),
     fileFilter: (req, file, cb) => {
-        const extensao = ['image/png', 'image/jpg', 'image/jpeg'].find(formatoAceito => formatoAceito == file.mimetype)
+        const extensao = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'].find(formatoAceito => formatoAceito == file.mimetype)
 
         if(extensao) {
             return cb(null, true)
