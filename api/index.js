@@ -17,7 +17,7 @@ const parser = new xml2js.Parser({
 });
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -66,11 +66,6 @@ app.post("/", (req, res) => {
                     img: e.image_link,
                   },
                 ]);
-                // res.send({
-                //   id: e.id,
-                //   name: e.title,
-                //   price:
-                // })
                 break;
               }
             }
@@ -152,5 +147,21 @@ await sharp(__dirname + '/public/resize.png')
     })
     res.send("http://localhost:8080/files/banner.jpg")
 });
+app.get("/apagar", (req, res) => {
+  fs.rm("./public", { recursive: true }, (err) => { 
+    if (err) { 
+      console.error(err);
+    } 
+    else { 
+      console.log("Directory Deleted!"); 
+      fs.mkdir(path.join(__dirname, 'public'), (err) => {
+        if (err) {
+          return console.error(err);
+      }
+      console.log('Directory created successfully!');
+      })
+    }
+  });
+})
 
 app.listen(port, () => console.log(`Porta ${port}`));
