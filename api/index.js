@@ -24,6 +24,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: "true" }));
 app.use("/files", express.static(path.resolve(__dirname, "public")))
 
+fs.mkdir(path.join(__dirname, 'public'), (err) => {
+  if (err) {
+    return console.error(err);
+}
+console.log('Directory created successfully!');
+})
+
 app.get("/", (req, res) => {
   res.send("<a href='https://banner-generatorrg.netlify.app/'>Entre</a>")
 })
@@ -149,7 +156,7 @@ await sharp(__dirname + '/public/resize.png')
     }).catch(error => {
       console.log(error)
     })
-    res.send("http://localhost:8080/files/banner.jpg")
+    res.send("https://bannergenerator.herokuapp.com/files/banner.jpg")
 });
 app.get("/apagar", (req, res) => {
   fs.rm("./public", { recursive: true }, (err) => { 

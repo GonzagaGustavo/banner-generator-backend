@@ -5,7 +5,7 @@ const multer = require('multer')
 module.exports = (multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            cb(null, './public')
+            cb(null, __dirname +'/../public')
         },
         filename: (req, file, cb) => {
             cb(null, `background.${file.mimetype.substring(6, 10)}`)
