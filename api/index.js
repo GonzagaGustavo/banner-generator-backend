@@ -143,7 +143,7 @@ await sharp(__dirname + '/public/resize.png')
       console.log(err);
     });
 
-    await sharp(__dirname + './public/background.jpg')
+    await sharp(__dirname + '/public/background.jpg')
     .resize({ width: 1000, height: 430 })
     .composite([{
       input: `${__dirname}/public/product.png`, top: 15, left: 30
