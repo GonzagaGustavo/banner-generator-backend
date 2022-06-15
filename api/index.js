@@ -24,6 +24,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: "true" }));
 app.use("/files", express.static(path.resolve(__dirname, "public")))
 
+app.get("/", (req, res) => {
+  res.send("<a href='https://banner-generatorrg.netlify.app/'>Entre</a>")
+})
+
 app.post("/upload", uploadUser.single("image"), async (req, res) => {
   if (req.file) {
     console.log(req.file.mimetype)
