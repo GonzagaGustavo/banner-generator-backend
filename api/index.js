@@ -5,8 +5,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const sharp = require("sharp");
 const { default: axios } = require("axios");
-const FormData = require('form-data');
-const fs = require('fs');
+const FormData = require("form-data");
+const fs = require("fs");
 const uploadUser = require("./midleware/upload");
 const path = require("path");
 const stripPrefix = require("xml2js").processors.stripPrefix;
@@ -22,24 +22,26 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: "true" }));
-sharp.cache(false)
-app.use("/files", express.static(path.resolve(__dirname, "public")))
+sharp.cache(false);
+app.use("/files", express.static(path.resolve(__dirname, "public")));
 
-fs.mkdir(path.join(__dirname, 'public'), (err) => {
+fs.mkdir(path.join(__dirname, "public"), (err) => {
   if (err) {
     return console.error(err);
-}
-console.log('Directory created successfully!');
-})
+  }
+  console.log("Directory created successfully!");
+});
 
 app.get("/", (req, res) => {
-  res.send("<a href='https://banner-generatorrg.netlify.app/'>Entre</a>")
-})
+  res.send("<a href='https://banner-generatorrg.netlify.app/'>Entre</a>");
+});
 
 app.post("/upload", uploadUser.single("image"), async (req, res) => {
   if (req.file) {
-    console.log(req.file.mimetype)
-    sharp(__dirname + `/public/background.${req.file.mimetype.substring(6, 10)}`)
+    console.log(req.file.mimetype);
+    sharp(
+      __dirname + `/public/background.${req.file.mimetype.substring(6, 10)}`
+    )
       .toFile(__dirname + "/public/background.jpg")
       .then((info) => {
         console.log(info);
@@ -113,29 +115,30 @@ app.post("/createBanner", async (req, res) => {
       return console.error("Request failed:", error);
     });
 
-await sharp(__dirname + '/public/resize.png')
-  .resize({ width: 400, height: 400})
-  .toFile(__dirname + '/public/product.png')
-  .then(info => {
-    console.log(info)
-  }).catch(error => {
-    console.log(error)
-  })
+  await sharp(__dirname + "/public/resize.png")
+    .resize({ width: 400, height: 400 })
+    .toFile(__dirname + "/public/product.png")
+    .then((info) => {
+      console.log(info);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
   await sharp(
-    Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1000" height="430" viewBox="0 0 1000 430" xml:space="preserve">
+    Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1000" height="430" viewBox="0 0 1000 430" xml:space="preserve" style="padding: 2em">
     <defs>
     <style type="text/css">
-      @import url('https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic');
+      @import url('<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">');
    </style>
   </defs>
-  <text style="font-family: 'Roboto';" font-size="40" dy="40%" dx="40%" fill="#000">${req.body[0].name}</text>
-    <text  font-size="30" dy="51%" dx="40%" fill="#000">${req.body[0].price}</text>
-    <text font-size="20" dy="61%" dx="40%" fill="#000">${req.body[0].p_mounth}x de ${req.body[0].p_value}</text>
+  <text style="font-family: 'Montserrat';" font-size="40" dy="40%" dx="30%" fill="#000">${req.body[0].name}</text>
+    <text style="font-family: 'Montserrat';"  font-size="28" dy="51%" dx="30%" fill="#000">${req.body[0].price}</text>
+    <text style="font-family: 'Montserrat';" font-size="24" dy="61%" dx="30%" fill="#000">${req.body[0].p_mounth}x de ${req.body[0].p_value}</text>
 </svg>`)
   )
     .png()
-    .toFile(__dirname + '/public/text.png')
+    .toFile(__dirname + "/public/text.png")
     .then(function (info) {
       console.log(info);
     })
@@ -143,35 +146,40 @@ await sharp(__dirname + '/public/resize.png')
       console.log(err);
     });
 
-    await sharp(__dirname + '/public/background.jpg')
+  await sharp(__dirname + "/public/background.jpg")
     .resize({ width: 1000, height: 430 })
-    .composite([{
-      input: `${__dirname}/public/product.png`, top: 15, left: 30
-    }, { input: `${__dirname}/public/text.png` }])
+    .composite([
+      {
+        input: `${__dirname}/public/product.png`,
+        top: 15,
+        left: 30,
+      },
+      { input: `${__dirname}/public/text.png` },
+    ])
     .toFile(`${__dirname}/public/banner.jpg`)
-    .then(info => {
-      console.log(info)
-    }).catch(error => {
-      console.log(error)
+    .then((info) => {
+      console.log(info);
     })
-    res.send("https://bannergenerator.herokuapp.com/files/banner.jpg")
+    .catch((error) => {
+      console.log(error);
+    });
+  res.send("https://bannergenerator.herokuapp.com/files/banner.jpg");
 });
 app.get("/apagar", (req, res) => {
-  fs.rm("./public", { recursive: true }, (err) => { 
-    if (err) { 
+  fs.rm("./public", { recursive: true }, (err) => {
+    if (err) {
       console.error(err);
-    } 
-    else { 
-      console.log("Directory Deleted!"); 
-      fs.mkdir(path.join(__dirname, 'public'), (err) => {
+    } else {
+      console.log("Directory Deleted!");
+      fs.mkdir(path.join(__dirname, "public"), (err) => {
         if (err) {
           return console.error(err);
-      }
-      console.log('Directory created successfully!');
-      res.send("Clean Directory")
-      })
+        }
+        console.log("Directory created successfully!");
+        res.send("Clean Directory");
+      });
     }
   });
-})
+});
 
 app.listen(port, () => console.log(`Porta ${port}`));
