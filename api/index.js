@@ -22,6 +22,7 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: "true" }));
+sharp.cache(false)
 app.use("/files", express.static(path.resolve(__dirname, "public")))
 
 fs.mkdir(path.join(__dirname, 'public'), (err) => {
@@ -88,7 +89,6 @@ app.post("/", (req, res) => {
     }
   );
 });
-
 app.post("/createBanner", async (req, res) => {
   const formData = new FormData();
   formData.append("size", "auto");
@@ -100,7 +100,7 @@ app.post("/createBanner", async (req, res) => {
     responseType: "arraybuffer",
     headers: {
       ...formData.getHeaders(),
-      "X-Api-Key": "m3JMGb158kG5rBmpq4a6fXFA",
+      "X-Api-Key": "fFzp8c8W8TxwogSPypCi4sqJ",
     },
     encoding: null,
   })
@@ -168,6 +168,7 @@ app.get("/apagar", (req, res) => {
           return console.error(err);
       }
       console.log('Directory created successfully!');
+      res.send("Clean Directory")
       })
     }
   });
