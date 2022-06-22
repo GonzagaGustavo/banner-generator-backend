@@ -1,3 +1,4 @@
+const connection = require("./connection");
 const express = require("express");
 const https = require("https");
 const xml2js = require("xml2js");
@@ -8,7 +9,7 @@ const { default: axios } = require("axios");
 const FormData = require("form-data");
 const fs = require("fs");
 const uploadUser = require("./midleware/upload");
-const uploadXml = require("./midleware/uploadXml")
+const uploadXml = require("./midleware/uploadXml");
 const path = require("path");
 const stripPrefix = require("xml2js").processors.stripPrefix;
 const parser = new xml2js.Parser({
@@ -56,41 +57,36 @@ app.post("/upload", uploadUser.single("image"), async (req, res) => {
   }
 });
 app.post("/", (req, res) => {
-  let reu = https.get(
-    req.body.link,
-    function (ress) {
-      let data = "";
-      ress.on("data", function (stream) {
-        data += stream;
-      });
-      ress.on("end", function () {
-        parser.parseString(data, function (error, result) {
-          if (error === null) {
-            for (let i = 0; i < result.feed.entry.length; i++) {
-              if (
-                JSON.stringify(result.feed.entry[i].id) == `"${req.body.id}"`
-              ) {
-                const e = result.feed.entry[i];
-                res.send([
-                  {
-                    id: e.id,
-                    name: e.title,
-                    price: e.price,
-                    p_value: e.installment.amount,
-                    p_mounth: e.installment.months,
-                    img: e.image_link,
-                  },
-                ]);
-                break;
-              }
+  let reu = https.get(req.body.link, function (ress) {
+    let data = "";
+    ress.on("data", function (stream) {
+      data += stream;
+    });
+    ress.on("end", function () {
+      parser.parseString(data, function (error, result) {
+        if (error === null) {
+          for (let i = 0; i < result.feed.entry.length; i++) {
+            if (JSON.stringify(result.feed.entry[i].id) == `"${req.body.id}"`) {
+              const e = result.feed.entry[i];
+              res.send([
+                {
+                  id: e.id,
+                  name: e.title,
+                  price: e.price,
+                  p_value: e.installment.amount,
+                  p_mounth: e.installment.months,
+                  img: e.image_link,
+                },
+              ]);
+              break;
             }
-          } else {
-            console.log(error);
           }
-        });
+        } else {
+          console.log(error);
+        }
       });
-    }
-  )
+    });
+  });
 });
 app.post("/createBanner", async (req, res) => {
   const formData = new FormData();
@@ -184,17 +180,15 @@ app.get("/apagar", (req, res) => {
 });
 
 app.post("/baixarXML", uploadXml.single("XML"), async (req, res) => {
-  res.send(req.file.filename)
-})
+  res.send(req.file.filename);
+});
 app.post("/buscarAqv", (req, res) => {
-  console.log(req.body.file)
+  console.log(req.body.file);
   fs.readFile(__dirname + `/public/${req.body.file}`, (err, data) => {
     parser.parseString(data, function (error, result) {
       if (error === null) {
         for (let i = 0; i < result.feed.entry.length; i++) {
-          if (
-            JSON.stringify(result.feed.entry[i].id) == `"${req.body.id}"`
-          ) {
+          if (JSON.stringify(result.feed.entry[i].id) == `"${req.body.id}"`) {
             const e = result.feed.entry[i];
             res.send([
               {
@@ -213,7 +207,20 @@ app.post("/buscarAqv", (req, res) => {
         console.log(error);
       }
     });
-  })
-})
+  });
+});
+
+app.post("/login", (req, resp) => {
+  connection.query(
+    `SELECT * FROM usuarios WHERE email LIKE '${req.body.email}' AND senha LIKE '${req.body.senha}'`,
+    (err, results) => {
+      if (results.length === 0) {
+        resp.send(false);
+      } else {
+        resp.send(true);
+      }
+    }
+  );
+});
 
 app.listen(port, () => console.log(`Porta ${port}`));
