@@ -1,9 +1,9 @@
 const mysql = require("mysql2");
 const connection = mysql.createConnection({
   database: "banners",
-  user: "zre4zd5ycirz",
+  user: "rtfhacutv8j9",
   host: "np0zi8nzgp2s.aws-sa-east-1-1.psdb.cloud",
-  password: "pscale_pw_Nk6MARQQiMfDO3pe3MlVO8ADen7YgYSpF6lZwuF4l4E",
+  password: "pscale_pw_yKCxjhwhrevtAp5SuJmtpXX_yPpWEFSQQpl2FxwETHM",
   ssl: {
     require: true,
     rejectUnauthorized: false,
