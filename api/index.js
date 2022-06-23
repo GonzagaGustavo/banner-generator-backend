@@ -11,6 +11,7 @@ const fs = require("fs");
 const uploadUser = require("./midleware/upload");
 const uploadXml = require("./midleware/uploadXml");
 const path = require("path");
+const router = require("./Login/routes");
 const stripPrefix = require("xml2js").processors.stripPrefix;
 const parser = new xml2js.Parser({
   explicitArray: false,
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: "true" }));
 sharp.cache(false);
 app.use("/files", express.static(path.resolve(__dirname, "public")));
+app.use('/users', router)
 
 fs.mkdir(path.join(__dirname, "public"), (err) => {
   if (err) {
