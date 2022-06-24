@@ -26,46 +26,28 @@ router.post("/", async (req, res) => {
       }
     });
   } else if (req.body.role == 3) {
-    connection.query(
-      `SELECT * FROM relacionamento WHERE relacionamento.admin_id = ${req.body.id}`,
-      (err, results) => {
+    connection.query( `SELECT * FROM relacionamento WHERE relacionamento.admin_id = ${req.body.id}`, (err, results) => {
         if (err) {
           console.log(err);
         } else {
-          let users = [];
-          //   for (let i = 0; i < results.length; i++) {
-          //     connection.query(
-          //       `SELECT * FROM usuarios WHERE usuarios.id = ${results[i].user_id}`,
-          //       (err, result) => {
-          //         if (err) {
-          //           console.log(err);
-          //         } else {
-          //           users.push(result);
-          //         }
-          //       }
-          //     );
-          //   }
-
+          let users = "";
           results.forEach((data) => {
-            connection.query(
-              `SELECT * FROM usuarios WHERE usuarios.id = ${data.user_id}`,
-              (err, result) => {
-                if (err) {
-                  console.log(err);
-                } else {
-                  users.push(result);
-                  console.log(users);
-                }
-              }
-            );
+            users += data.user_id+","
           });
-          console.log(users);
-          res.send(users);
+          users = users.slice(0, -1)
+          connection.query( `SELECT * FROM usuarios WHERE usuarios.id IN (${users})`, (err, result) => {
+            if (err) {
+              console.log(err);
+            } else {
+              res.send(result);
+            }
+          });
         }
       }
     );
   }
 });
+
 router.post("/upgradeToAdm", (req, res) => {
   connection.query(
     `UPDATE usuarios SET role = '3' WHERE usuarios.id = ${req.body.id}`,
