@@ -49,7 +49,7 @@ app.post("/upload", uploadUser.single("image"), async (req, res) => {
       });
     res.send("Upload Realizado");
   } else {
-    res.status(400).send("Formato não aceito!");
+    res.status(400).send("Erro no upload!");
   }
 });
 app.post("/", (req, res) => {
@@ -100,7 +100,7 @@ app.post("/createBanner", async (req, res) => {
     responseType: "arraybuffer",
     headers: {
       ...formData.getHeaders(),
-      "X-Api-Key": "nanYMaaY2ffpmX4yQPt58yHw",
+      "X-Api-Key": "TuXg72XccgAKQLoS9cYr1fb6",
     },
     encoding: null,
   })
