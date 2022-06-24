@@ -212,17 +212,4 @@ app.post("/buscarAqv", (req, res) => {
   });
 });
 
-app.post("/login", (req, resp) => {
-  connection.query(
-    `SELECT * FROM usuarios WHERE email LIKE '${req.body.email}' AND senha LIKE '${req.body.senha}'`,
-    (err, results) => {
-      if (results.length === 0) {
-        resp.send(false);
-      } else {
-        resp.send(true);
-      }
-    }
-  );
-});
-
 app.listen(port, () => console.log(`Porta ${port}`));
