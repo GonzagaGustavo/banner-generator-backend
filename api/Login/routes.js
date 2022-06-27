@@ -1,6 +1,7 @@
 const connection = require("../connection");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
+const generateToken = require("./utils");
 
 router.post("/create", (req, res) => {
   const senha = bcrypt.hashSync(req.body.senha, 8);
@@ -85,12 +86,16 @@ router.post("/downgrade");
 
 router.post("/login", (req, res) => {
   connection.query(
-    `SELECT * FROM usuarios WHERE email LIKE '${req.body.email}' AND senha LIKE '${req.body.senha}'`,
+    `SELECT * FROM usuarios WHERE email LIKE '${req.body.email}'`,
     (err, results) => {
-      if (results.length === 0) {
-        res.send(false);
+      if(bcrypt.compareSync(req.body.senha, results[0].senha)) {
+        let saves = {
+          id: results[0].id,
+          token: generateToken(results[0])
+        }
+        res.send(saves)
       } else {
-        res.send(true);
+        res.send(false)
       }
     }
   );
