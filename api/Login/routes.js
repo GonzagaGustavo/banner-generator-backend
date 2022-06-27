@@ -2,6 +2,7 @@ const connection = require("../connection");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const generateToken = require("./utils");
+const getRole = require("./utils");
 
 router.post("/create", (req, res) => {
   const senha = bcrypt.hashSync(req.body.senha, 8);
@@ -48,6 +49,20 @@ router.post("/", async (req, res) => {
     );
   }
 });
+
+router.post("/checkRole", (req, res) => {
+  connection.query( `SELECT * FROM usuarios WHERE email LIKE '${req.body.email}'`, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      if(bcrypt.compareSync(senha, user.senha)) {
+        res.send(""+user.role)
+      } else {
+        res.send("0")
+      }
+    }
+  })
+})
 
 router.post("/upgradeToAdm", (req, res) => {
   connection.query(
