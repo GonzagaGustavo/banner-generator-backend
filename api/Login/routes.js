@@ -109,8 +109,8 @@ router.post("/login", (req, res) => {
   );
 });
 
-router.post("/getEdit", (req, res) => {
-  connection.query(`SELECT nome FROM usuarios WHERE usuarios.id=${req.body.id}`, (err, results) => {
+router.post("/getUser", (req, res) => {
+  connection.query(`SELECT nome, email, role, can_create FROM usuarios WHERE usuarios.id=${req.body.id}`, (err, results) => {
     if (err) {
       console.log(err);
     } else {
@@ -132,6 +132,16 @@ router.post("/editName", (req, res) => {
 router.post("/editPass", (req, res) => {
   const senha = bcrypt.hashSync(req.body.senha, 8);
   connection.query(`UPDATE usuarios SET senha='${senha}' WHERE usuarios.id=${req.body.id}`, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send("Atualizado!");
+    }
+  })
+})
+
+router.post("/editCanCreate", (req, res) => {
+  connection.query(`UPDATE usuarios SET can_create='${req.body.creates}' WHERE usuarios.id=${req.body.id}`, (err) => {
     if (err) {
       console.log(err);
     } else {
