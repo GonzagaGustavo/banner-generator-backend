@@ -63,7 +63,7 @@ router.post("/upgradeToAdm", (req, res) => {
 });
 router.post("/upgradeToMember", (req, res) => {
   connection.query(
-    `UPDATE usuarios SET role = '2' WHERE usuarios.id = ${req.body.idUser}`,
+    `UPDATE usuarios SET role = 2 WHERE usuarios.id = ${req.body.idUser}`,
     (err) => {
       if (err) {
         console.log(err);
@@ -82,7 +82,13 @@ router.post("/upgradeToMember", (req, res) => {
     }
   );
 });
-router.post("/downgrade");
+router.post("/downgrade", (req, res) => {
+  connection.query(`UPDATE usuarios SET role = ${req.body.role} WHERE usuarios.id = ${req.body.idUser}`, (err) => {
+    if (err) {
+      console.log(err);
+    }
+  })
+});
 
 router.post("/login", (req, res) => {
   connection.query(
@@ -100,5 +106,23 @@ router.post("/login", (req, res) => {
     }
   );
 });
+router.post("/getEdit", (req, res) => {
+  connection.query(`SELECT nome FROM usuarios WHERE usuarios.id=${req.body.id}`, (err, results) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(results[0]);
+    }
+  })
+})
+router.post("/edit", (req, res) => {
+  connection.query(`UPDATE usuarios SET nome='${req.body.nome}' WHERE usuarios.id=${req.body.id}`, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send("Atualizado!");
+    }
+  })
+})
 
 module.exports = router;
