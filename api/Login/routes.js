@@ -127,7 +127,6 @@ router.post("/login", (req, res) => {
         if (results.length == 0) {
           res.send(false);
         } else {
-          console.log("oi")
           if (bcrypt.compareSync(req.body.senha, results[0].senha)) {
             let saves = {
               id: results[0].id,
