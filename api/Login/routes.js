@@ -2,6 +2,7 @@ const connection = require("../connection");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const generateToken = require("./utils");
+const jwt = require('jsonwebtoken')
 
 router.post("/create", (req, res) => {
   const senha = bcrypt.hashSync(req.body.senha, 8);
@@ -18,7 +19,8 @@ router.post("/create", (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  if (req.body.role == 4) {
+  const infos = jwt.verify(req.body.token, 'Chave Secreta')
+  if (infos.role == 4) {
     connection.query("SELECT * FROM usuarios;", (err, results) => {
       if (err) {
         console.log(err);
@@ -51,6 +53,8 @@ router.post("/", async (req, res) => {
         }
       }
     );
+  } else {
+    res.send(false)
   }
 });
 
