@@ -198,5 +198,22 @@ router.post("/editCanCreate", (req, res) => {
     }
   );
 });
+router.post("/delete", (req, res) => {
+  connection.query(`SELECT role FROM usuarios WHERE usuarios.id IN (${req.body.ids})`, (results, err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(results)
+    }
+  })
+
+  connection.query(`DELETE FROM usuarios WHERE usuarios.id IN (${req.body.ids})`, (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send("Deletado!");
+    }
+  })
+})
 
 module.exports = router;
