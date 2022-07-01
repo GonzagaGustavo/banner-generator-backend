@@ -207,13 +207,13 @@ router.post("/delete", (req, res) => {
     }
   })
 
-  connection.query(`DELETE FROM usuarios WHERE usuarios.id IN (${req.body.ids})`, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send("Deletado!");
-    }
-  })
+  // connection.query(`DELETE FROM usuarios WHERE usuarios.id IN (${req.body.ids})`, (err) => {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     res.send("Deletado!");
+  //   }
+  // })
 })
 
 module.exports = router;
