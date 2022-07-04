@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
         res.send(results);
       }
     });
-  } else if (req.body.role == 3) {
+  } else if (infos.role == 3) {
     connection.query(
       `SELECT * FROM relacionamento WHERE relacionamento.admin_id = ${req.body.id}`,
       (err, results) => {
