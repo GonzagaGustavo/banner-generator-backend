@@ -153,7 +153,11 @@ router.post("/getUser", (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        res.send(results[0]);
+        if(results.length == 0) {
+          res.send(false)
+        } else {
+          res.send(results[0]);
+        }
       }
     }
   );
@@ -198,6 +202,19 @@ router.post("/editCanCreate", (req, res) => {
     }
   );
 });
+router.post("/edit", (req, res) => {
+  connection.query(
+    `UPDATE usuarios SET nome='${req.body.values.nome}', role=${req.body.values.role}, email='${req.body.values.email}', can_create=${req.body.values.can_create} WHERE usuarios.id=${req.body.id}`,
+    (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Usuario editado!");
+      }
+    }
+  );
+})
+
 router.post("/delete", (req, res) => {
   connection.query(`SELECT role FROM usuarios WHERE usuarios.id IN (${req.body.ids})`, (results, err) => {
     if (err) {
