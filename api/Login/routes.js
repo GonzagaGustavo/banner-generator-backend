@@ -2,7 +2,7 @@ const connection = require("../connection");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const generateToken = require("./utils");
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 router.post("/create", (req, res) => {
   const senha = bcrypt.hashSync(req.body.senha, 8);
@@ -19,7 +19,7 @@ router.post("/create", (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const infos = jwt.verify(req.body.token, 'Chave Secreta')
+  const infos = jwt.verify(req.body.token, "Chave Secreta");
   if (infos.role == 4) {
     connection.query("SELECT * FROM usuarios;", (err, results) => {
       if (err) {
@@ -30,7 +30,7 @@ router.post("/", async (req, res) => {
     });
   } else if (infos.role == 3) {
     connection.query(
-      `SELECT * FROM relacionamento WHERE relacionamento.admin_id = ${req.body.id}`,
+      `SELECT * FROM relacionamento WHERE relacionamento.admin_id = ${infos.id}`,
       (err, results) => {
         if (err) {
           console.log(err);
@@ -54,22 +54,32 @@ router.post("/", async (req, res) => {
       }
     );
   } else {
-    res.send(false)
+    res.send(false);
   }
 });
 
 router.post("/checkRole", (req, res) => {
+  const info = jwt.verify(req.body.token, "Chave Secreta");
+  if (info.role === 4) {
+    res.send("4");
+  } else if (info.role === 3) {
+    res.send("3");
+  } else if(info.role === 2) {
+    res.send("2")
+  } else if(info.role === 1) {
+    res.send("1")
+  }
+});
+router.post("/editVerify", (req, res) => {
+  const info = jwt.verify(req.body.token, "Chave Secreta");
   connection.query(
-    `SELECT * FROM usuarios WHERE email LIKE '${req.body.email}'`,
+    `SELECT * FROM relacionamento WHERE relacionamento.admin_id = ${info.id}`,
     (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        if (bcrypt.compareSync(senha, user.senha)) {
-          res.send("" + user.role);
-        } else {
-          res.send("0");
-        }
+        console.log(results)
+        res.send(results)
       }
     }
   );
@@ -153,8 +163,8 @@ router.post("/getUser", (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        if(results.length == 0) {
-          res.send(false)
+        if (results.length == 0) {
+          res.send(false);
         } else {
           res.send(results[0]);
         }
@@ -213,16 +223,29 @@ router.post("/edit", (req, res) => {
       }
     }
   );
+});
+router.post("/getCan_Create", (req, res) => {
+  const info = jwt.verify(req.body.token, 'Chave Secreta')
+    connection.query(`SELECT can_create FROM usuarios WHERE usuarios.id=${info.id}`, (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(results);
+      }
+    })
 })
 
 router.post("/delete", (req, res) => {
-  connection.query(`SELECT role FROM usuarios WHERE usuarios.id IN (${req.body.ids})`, (results, err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(results)
+  connection.query(
+    `SELECT role FROM usuarios WHERE usuarios.id IN (${req.body.ids})`,
+    (results, err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(results);
+      }
     }
-  })
+  );
 
   // connection.query(`DELETE FROM usuarios WHERE usuarios.id IN (${req.body.ids})`, (err) => {
   //   if (err) {
@@ -231,6 +254,6 @@ router.post("/delete", (req, res) => {
   //     res.send("Deletado!");
   //   }
   // })
-})
+});
 
 module.exports = router;
