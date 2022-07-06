@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rotas Banner Generator</title>
+    <style>
+        * {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+body {
+    margin: 0px;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(109, 218, 107, 0.562);
+}
+h1 {
+    margin: 0px;
+    text-align: center;
+}
+.rota {
+    display: flex;
+    align-items: center;
+}
+.rota p:hover {
+    letter-spacing: 0.13em;
+    transition: 1s linear;
+}
+.rota p {
+    margin: 1%;
+}
+    </style>
+  </head>
+  <body>
+    <h1>Documentação do projeto</h1>
+    <div>
+      <div class="rota">
+        <h3>"/"</h3>
+        <p>
+          Essa é a rota principal, se você já está logado lhe redireciona para a
+          rota "/painel", se não estiver logado ficara nesta rota para fazer o
+          login.
+        </p>
+      </div>
+      <div class="rota">
+        <h3>"/painel"</h3>
+        <p>Essa é a rota para você criar seu banner.</p>
+      </div>
+      <div class="rota">
+        <h3>"/admin"</h3>
+        <p>Essa é a rota do super Admin e do admin que da para ver uma lista de todos os usuários.</p>
+      </div>
+      <div class="rota">
+        <h3>"/signup"</h3>
+        <p>Essa é a rota para criar um usuario.</p>
+      </div>
+      <div class="rota">
+        <h3>"/admin/edit/:id"</h3>
+        <p>Essa é a rota para editar um usuario. No lugar de (:id) você coloca o id de um usuario, mas somente um super admin ou um admin com permissão conseguira editar.</p>
+      </div>
+    </div>
+  </body>
+</html>

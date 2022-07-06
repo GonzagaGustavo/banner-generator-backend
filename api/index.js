@@ -30,13 +30,23 @@ sharp.cache(false);
 app.use("/files", express.static(path.resolve(__dirname, "public")));
 app.use("/users", router);
 
+app.get('/rotas', function(req, res) {
+    fs.readFile(__dirname + '/Views/routes.html', null, (err, data) => {
+      if(err) {
+        res.write('Whoops! File not found!');
+      } else {
+        res.write(data);
+      }
+      res.end()
+    })
+});
 fs.mkdir(path.join(__dirname, "public"), (err) => {
   if (err) {
     return console.error(err);
   }
   console.log("Directory created successfully!");
 });
-const a = new url.URL("https://localhost:8080/")
+const a = new url.URL("https://bannergenerator.herokuapp.com/")
 app.get("/", (req, res) => {
   res.send("<a href='https://banner-generatorrg.netlify.app/'>Entre</a>");
 });
