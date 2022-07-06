@@ -18,6 +18,7 @@ const parser = new xml2js.Parser({
   tagNameProcessors: [stripPrefix],
   attrNameProcessors: [stripPrefix],
 });
+const url = require('url')
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -35,7 +36,7 @@ fs.mkdir(path.join(__dirname, "public"), (err) => {
   }
   console.log("Directory created successfully!");
 });
-
+const a = new url.URL("https://localhost:8080/")
 app.get("/", (req, res) => {
   res.send("<a href='https://banner-generatorrg.netlify.app/'>Entre</a>");
 });
@@ -101,7 +102,7 @@ app.post("/createBanner", async (req, res) => {
     responseType: "arraybuffer",
     headers: {
       ...formData.getHeaders(),
-      "X-Api-Key": "jSPjGoGLWnjJuTnohdYKdujd",
+      "X-Api-Key": "8tbs8xmWyanRaWNPaVUvpDCq",
     },
     encoding: null,
   })
@@ -157,12 +158,14 @@ app.post("/createBanner", async (req, res) => {
     ])
     .toFile(`${__dirname}/public/banner.jpg`)
     .then((info) => {
-      console.log(info);
+      console.log(info)
+      res.send(a.href + "files/banner.jpg");
     })
     .catch((error) => {
+      res.status(400).send("Erro ao gerar o banner!")
       console.log(error);
     });
-  res.send("https://bannergenerator.herokuapp.com/files/banner.jpg");
+  console.log(a.href)
 });
 app.get("/apagar", (req, res) => {
   fs.rm("./public", { recursive: true }, (err) => {
