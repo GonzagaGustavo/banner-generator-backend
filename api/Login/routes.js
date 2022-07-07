@@ -29,30 +29,37 @@ router.post("/", async (req, res) => {
       }
     });
   } else if (infos.role == 3) {
-    connection.query(
-      `SELECT * FROM relacionamento WHERE relacionamento.admin_id = ${infos.id}`,
-      (err, results) => {
-        if (err) {
-          console.log(err);
-        } else {
-          let users = "";
-          results.forEach((data) => {
-            users += data.user_id + ",";
-          });
-          users = users.slice(0, -1);
-          connection.query(
-            `SELECT * FROM usuarios WHERE usuarios.id IN (${users})`,
-            (err, result) => {
-              if (err) {
-                console.log(err);
-              } else {
-                res.send(result);
-              }
-            }
-          );
-        }
+    connection.query("SELECT * FROM usuarios;", (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(results);
       }
-    );
+    });
+    // connection.query(
+    //   `SELECT * FROM relacionamento WHERE relacionamento.admin_id = ${infos.id}`,
+    //   (err, results) => {
+    //     if (err) {
+    //       console.log(err);
+    //     } else {
+    //       let users = "";
+    //       results.forEach((data) => {
+    //         users += data.user_id + ",";
+    //       });
+    //       users = users.slice(0, -1);
+    //       connection.query(
+    //         `SELECT * FROM usuarios WHERE usuarios.id IN (${users})`,
+    //         (err, result) => {
+    //           if (err) {
+    //             console.log(err);
+    //           } else {
+    //             res.send(result);
+    //           }
+    //         }
+    //       );
+    //     }
+    //   }
+    // );
   } else {
     res.send(false);
   }
@@ -64,10 +71,10 @@ router.post("/checkRole", (req, res) => {
     res.send("4");
   } else if (info.role === 3) {
     res.send("3");
-  } else if(info.role === 2) {
-    res.send("2")
-  } else if(info.role === 1) {
-    res.send("1")
+  } else if (info.role === 2) {
+    res.send("2");
+  } else if (info.role === 1) {
+    res.send("1");
   }
 });
 router.post("/editVerify", (req, res) => {
@@ -78,8 +85,8 @@ router.post("/editVerify", (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(results)
-        res.send(results)
+        console.log(results);
+        res.send(results);
       }
     }
   );
@@ -225,35 +232,45 @@ router.post("/edit", (req, res) => {
   );
 });
 router.post("/getCan_Create", (req, res) => {
-  const info = jwt.verify(req.body.token, 'Chave Secreta')
-    connection.query(`SELECT can_create FROM usuarios WHERE usuarios.id=${info.id}`, (err, results) => {
+  const info = jwt.verify(req.body.token, "Chave Secreta");
+  connection.query(
+    `SELECT can_create FROM usuarios WHERE usuarios.id=${info.id}`,
+    (err, results) => {
       if (err) {
         console.log(err);
       } else {
         res.send(results);
       }
-    })
-})
+    }
+  );
+});
 
 router.post("/delete", (req, res) => {
+  const info = jwt.verify(req.body.token, "Chave Secreta");
   connection.query(
     `SELECT role FROM usuarios WHERE usuarios.id IN (${req.body.ids})`,
-    (results, err) => {
+    (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(results);
+        for (let i = 0; i < req.body.ids.length; i++) {
+          if (results[i].role >= info.role) {
+          } else {
+            connection.query(
+              `DELETE FROM usuarios WHERE usuarios.id=${req.body.ids[i]}`,
+              (err) => {
+                if (err) {
+                  console.log(err);
+                } else {
+                  res.send("Deletado!");
+                }
+              }
+            );
+          }
+        }
       }
     }
   );
-
-  // connection.query(`DELETE FROM usuarios WHERE usuarios.id IN (${req.body.ids})`, (err) => {
-  //   if (err) {
-  //     console.log(err);
-  //   } else {
-  //     res.send("Deletado!");
-  //   }
-  // })
 });
 
 module.exports = router;
