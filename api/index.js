@@ -142,9 +142,9 @@ app.post("/createBanner", async (req, res) => {
       @import url('https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic');
    </style>
   </defs>
-  <text style="font-family: 'Roboto';" font-size="40" dy="40%" dx="40%" fill="#000">${req.body[0].name}</text>
-    <text  font-size="30" dy="51%" dx="40%" fill="#000">${req.body[0].price}</text>
-    <text font-size="20" dy="61%" dx="40%" fill="#000">${req.body[0].p_mounth}x de ${req.body[0].p_value}</text>
+  <text style="font-family: 'Roboto';" font-size="40" dy="40%" dx="30%" fill="#000">${req.body[0].name}</text>
+    <text  font-size="30" dy="51%" dx="30%" fill="#000">${req.body[0].price}</text>
+    <text font-size="20" dy="61%" dx="30%" fill="#000">${req.body[0].p_mounth}x de ${req.body[0].p_value}</text>
 </svg>`)
   )
     .png()
@@ -156,7 +156,7 @@ app.post("/createBanner", async (req, res) => {
       console.log(err);
     });
 
-  await sharp(__dirname + "./public/background.jpg")
+  await sharp(__dirname + "/public/background.jpg")
     .resize({ width: 1000, height: 430 })
     .composite([
       {
