@@ -5,14 +5,29 @@ const generateToken = require("./utils");
 const jwt = require("jsonwebtoken");
 
 router.post("/create", (req, res) => {
-  const senha = bcrypt.hashSync(req.body.senha, 8);
   connection.query(
-    `INSERT INTO usuarios (nome, email, senha) VALUES ('${req.body.nome}', '${req.body.email}', '${senha}')`,
-    (err) => {
+    `SELECT * FROM usuarios WHERE usuarios.email='${req.body.email}'`,
+    (err, results) => {
       if (err) {
         console.log(err);
       } else {
-        res.send("Usuário Criado!");
+        console.log(results)
+        if (results.length == 0) {
+          
+          const senha = bcrypt.hashSync(req.body.senha, 8);
+          connection.query(
+            `INSERT INTO usuarios (nome, email, senha) VALUES ('${req.body.nome}', '${req.body.email}', '${senha}')`,
+            (err) => {
+              if (err) {
+                console.log(err);
+              } else {
+                res.send(true);
+              }
+            }
+          );
+        } else {
+          res.send("Email já existe!")
+        }
       }
     }
   );
