@@ -16,7 +16,7 @@ router.post("/create", (req, res) => {
           
           const senha = bcrypt.hashSync(req.body.senha, 8);
           connection.query(
-            `INSERT INTO usuarios (nome, email, senha) VALUES ('${req.body.nome}', '${req.body.email}', '${senha}')`,
+            `INSERT INTO usuarios (nome, email, senha, aceito-termos) VALUES ('${req.body.nome}', '${req.body.email}', '${senha}', ${req.body.checked ? 1 : 0})`,
             (err) => {
               if (err) {
                 console.log(err);
