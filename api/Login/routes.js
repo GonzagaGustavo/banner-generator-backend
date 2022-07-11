@@ -16,7 +16,7 @@ router.post("/create", (req, res) => {
           
           const senha = bcrypt.hashSync(req.body.senha, 8);
           connection.query(
-            `INSERT INTO usuarios (nome, email, senha, aceito-termos) VALUES ('${req.body.nome}', '${req.body.email}', '${senha}', ${req.body.checked ? 1 : 0})`,
+            `INSERT INTO usuarios (nome, email, senha, aceito_termos) VALUES ('${req.body.nome}', '${req.body.email}', '${senha}', ${req.body.checked ? 1 : 0})`,
             (err) => {
               if (err) {
                 console.log(err);
@@ -259,6 +259,16 @@ router.post("/getCan_Create", (req, res) => {
     }
   );
 });
+router.post("/downCan_create", (req, res) => {
+  const info  = jwt.verify(req.body.token, "Chave Secreta")
+  connection.query(`SELECT can_create FROM usuarios WHERE usuarios.id=${info.id}`, (err, results) => {
+    connection.query(`UPDATE usuarios SET can_create=${results[0].can_create - 1} WHERE usuarios.id=${info.id}`, (err) => {
+      if(err) {
+        console.log(err)
+      }
+    })
+  })
+})
 
 router.post("/delete", (req, res) => {
   const info = jwt.verify(req.body.token, "Chave Secreta");
