@@ -11,12 +11,13 @@ router.post("/create", (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(results)
+        console.log(results);
         if (results.length == 0) {
-          
           const senha = bcrypt.hashSync(req.body.senha, 8);
           connection.query(
-            `INSERT INTO usuarios (nome, email, senha, aceito_termos) VALUES ('${req.body.nome}', '${req.body.email}', '${senha}', ${req.body.checked ? 1 : 0})`,
+            `INSERT INTO usuarios (nome, email, senha, aceito_termos) VALUES ('${
+              req.body.nome
+            }', '${req.body.email}', '${senha}', ${req.body.checked ? 1 : 0})`,
             (err) => {
               if (err) {
                 console.log(err);
@@ -26,7 +27,7 @@ router.post("/create", (req, res) => {
             }
           );
         } else {
-          res.send("Email já existe!")
+          res.send("Email já existe!");
         }
       }
     }
@@ -248,27 +249,39 @@ router.post("/edit", (req, res) => {
 });
 router.post("/getCan_Create", (req, res) => {
   const info = jwt.verify(req.body.token, "Chave Secreta");
+  if (info.role > 1) {
+    connection.query(
+      `SELECT can_create FROM usuarios WHERE usuarios.id=${info.id}`,
+      (err, results) => {
+        if (err) {
+          console.log(err);
+        } else {
+          res.send(results);
+        }
+      }
+    );
+  } else {
+    res.send([{can_create: 2}])
+  }
+});
+router.post("/downCan_create", (req, res) => {
+  const info = jwt.verify(req.body.token, "Chave Secreta");
   connection.query(
     `SELECT can_create FROM usuarios WHERE usuarios.id=${info.id}`,
     (err, results) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(results);
-      }
+      connection.query(
+        `UPDATE usuarios SET can_create=${
+          results[0].can_create - 1
+        } WHERE usuarios.id=${info.id}`,
+        (err) => {
+          if (err) {
+            console.log(err);
+          }
+        }
+      );
     }
   );
 });
-router.post("/downCan_create", (req, res) => {
-  const info  = jwt.verify(req.body.token, "Chave Secreta")
-  connection.query(`SELECT can_create FROM usuarios WHERE usuarios.id=${info.id}`, (err, results) => {
-    connection.query(`UPDATE usuarios SET can_create=${results[0].can_create - 1} WHERE usuarios.id=${info.id}`, (err) => {
-      if(err) {
-        console.log(err)
-      }
-    })
-  })
-})
 
 router.post("/delete", (req, res) => {
   const info = jwt.verify(req.body.token, "Chave Secreta");
