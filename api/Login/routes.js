@@ -249,7 +249,7 @@ router.post("/edit", (req, res) => {
 });
 router.post("/getCan_Create", (req, res) => {
   const info = jwt.verify(req.body.token, "Chave Secreta");
-  if (info.role > 1) {
+  if (info.role === 1) {
     connection.query(
       `SELECT can_create FROM usuarios WHERE usuarios.id=${info.id}`,
       (err, results) => {
@@ -261,7 +261,7 @@ router.post("/getCan_Create", (req, res) => {
       }
     );
   } else {
-    res.send([{can_create: 2}])
+    res.send(true)
   }
 });
 router.post("/downCan_create", (req, res) => {
