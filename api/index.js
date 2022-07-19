@@ -104,7 +104,7 @@ app.post("/", (req, res) => {
 app.post("/createBanner", async (req, res) => {
   const formData = new FormData();
   formData.append("size", "auto");
-  formData.append("image_url", req.body[0].img);
+  formData.append("image_url", req.body.dados.img);
   await axios({
     method: "post",
     url: "https://api.remove.bg/v1.0/removebg",
@@ -139,12 +139,12 @@ app.post("/createBanner", async (req, res) => {
     Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1000" height="430" viewBox="0 0 1000 430" xml:space="preserve" style="padding: 2em">
 <defs>
     <style type="text/css">
-      @import url('https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic');
+      @import url('https://fonts.googleapis.com/css?family=${req.body.personalization.font}:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic');
    </style>
   </defs>
-  <text style="font-family: 'Roboto';" font-size="40" dy="40%" dx="30%" fill="#000">${req.body[0].name}</text>
-    <text  font-size="30" dy="51%" dx="30%" fill="#000">${req.body[0].price}</text>
-    <text font-size="20" dy="61%" dx="30%" fill="#000">${req.body[0].p_mounth}x de ${req.body[0].p_value}</text>
+  <text style="font-family: '${req.body.personalization.font}';" font-size="${req.body.personalization.size1}" dy="40%" dx="30%" fill="${req.body.personalization.color}">${req.body.dados.name}</text>
+    <text style="font-family: '${req.body.personalization.font}';"  font-size="${req.body.personalization.size2}" dy="51%" dx="30%" fill="${req.body.personalization.color}">${req.body.dados.price}</text>
+    <text style="font-family: '${req.body.personalization.font}';" font-size="${req.body.personalization.size3}" dy="61%" dx="30%" fill="${req.body.personalization.color}">${req.body.dados.adiconalText}</text>
 </svg>`)
   )
     .png()
