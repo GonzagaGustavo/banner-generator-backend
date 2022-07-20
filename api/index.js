@@ -142,7 +142,7 @@ app.post("/createBanner", async (req, res) => {
       @import url('https://fonts.googleapis.com/css?family=${req.body.personalization.font}:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic,900,900italic');
    </style>
   </defs>
-  <text style="font-family: '${req.body.personalization.font}';" font-size="${req.body.personalization.size1}" dy="40%" dx="30%" fill="${req.body.personalization.color}">${req.body.dados.name}</text>
+  <text style="font-family: '${req.body.personalization.font}, sans-serif';" font-size="${req.body.personalization.size1}" dy="40%" dx="30%" fill="${req.body.personalization.color}">${req.body.dados.name}</text>
     <text style="font-family: '${req.body.personalization.font}';"  font-size="${req.body.personalization.size2}" dy="51%" dx="30%" fill="${req.body.personalization.color}">${req.body.dados.price}</text>
     <text style="font-family: '${req.body.personalization.font}';" font-size="${req.body.personalization.size3}" dy="61%" dx="30%" fill="${req.body.personalization.color}">${req.body.dados.adiconalText}</text>
 </svg>`)
