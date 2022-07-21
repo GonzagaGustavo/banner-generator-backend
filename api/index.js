@@ -112,7 +112,7 @@ app.post("/createBanner", async (req, res) => {
     responseType: "arraybuffer",
     headers: {
       ...formData.getHeaders(),
-      "X-Api-Key": "fFzp8c8W8TxwogSPypCi4sqJ",
+      "X-Api-Key": "Q2vjyrpguh3PTDjRfakdALgr",
     },
     encoding: null,
   })
