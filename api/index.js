@@ -224,5 +224,26 @@ app.post("/buscarAqv", (req, res) => {
     });
   });
 });
+app.post("/attBanner", async (req, res) => {
+  await sharp(__dirname + "/public/background.jpg")
+    .resize({ width: 1000, height: 430 })
+    .composite([
+      {
+        input: `${__dirname}/public/product.png`,
+        top: req.body.top,
+        left: req.body.left,
+      },
+      { input: `${__dirname}/public/text.png` },
+    ])
+    .toFile(`${__dirname}/public/banner.jpg`)
+    .then((info) => {
+      console.log(info)
+      res.send(a.href + "files/banner.jpg");
+    })
+    .catch((error) => {
+      res.status(400).send("Erro ao gerar o banner!")
+      console.log(error);
+    });
+})
 
 app.listen(port, () => console.log(`Porta ${port}`));
