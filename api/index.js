@@ -46,7 +46,7 @@ fs.mkdir(path.join(__dirname, "public"), (err) => {
   }
   console.log("Directory created successfully!");
 });
-const a = new url.URL("https://bannergenerator.herokuapp.com/")
+const a = new url.URL("http://localhost:8080/")
 app.get("/", (req, res) => {
   res.send("<a href='https://banner-generatorrg.netlify.app/'>Entre</a>");
 });
@@ -230,10 +230,11 @@ app.post("/attBanner", async (req, res) => {
     .composite([
       {
         input: `${__dirname}/public/product.png`,
-        top: req.body.top,
-        left: req.body.left,
+        top: req.body.topImg,
+        left: req.body.leftImg,
       },
-      { input: `${__dirname}/public/text.png` },
+      { input: `${__dirname}/public/text.png`, top: req.body.topText,
+      left: req.body.leftText },
     ])
     .toFile(`${__dirname}/public/banner.jpg`)
     .then((info) => {
